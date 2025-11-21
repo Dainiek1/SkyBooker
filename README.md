@@ -1,10 +1,6 @@
 
   # SkyBooker Homepage Design
-
-  This is a code bundle for SkyBooker Homepage Design. The original project is available at https://www.figma.com/design/dJbctNzqFRoQ3Qh9huJSjh/SkyBooker-Homepage-Design.
-
-  ## Running the code
-
+  Proyecto Ingeniería Web - Daniel Morales / Daniel Perez
   Run `npm i` to install the dependencies.
 
   Run `npm run dev` to start the development server.
