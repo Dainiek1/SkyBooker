@@ -4,6 +4,14 @@ export interface FlightFilters {
   fecha: string;
   pasajeros: number;
 }
+
+export interface Usuario {
+  id?: number;
+  nombre: string;
+  email: string;
+  rol: "admin" | "usuario";
+}
+
 export interface Vuelo {
   id: number;
   aerolinea: string;
@@ -15,6 +23,6 @@ export interface Vuelo {
   horaLlegada: string;
   duracion: string;
   precio: number;
-  escalas: number | null;
-  cuposDisponibles: number | null;
+  escalas: number;
+  cuposDisponibles: number;
 }

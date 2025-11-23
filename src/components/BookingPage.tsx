@@ -3,6 +3,7 @@ import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
+import axios from "axios";
 import { Separator } from "./ui/separator";
 import { Plane, Calendar, Clock, User, Mail, Phone, FileText, ArrowRight, CheckCircle } from "lucide-react";
 import { Alert, AlertDescription } from "./ui/alert";
@@ -30,16 +31,38 @@ export function BookingPage({ flight, onCancel, onContinueToPayment }: BookingPa
   const taxesAndFees = Math.round(flight.precio * 0.19);
   const totalPrice = flight.precio + taxesAndFees;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onContinueToPayment({
-      name: passengerData.fullName,
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    // 1️⃣ Crear pasajero en el backend
+    const response = await axios.post("http://localhost:8080/api/pasajeros", {
+      nombre: passengerData.fullName,
+      tipoDocumento: passengerData.documentType,
+      numeroDocumento: passengerData.documentNumber,
       email: passengerData.email,
-      documentType: passengerData.documentType,
-      documentNumber: passengerData.documentNumber,
-      phone: passengerData.phone
+      telefono: passengerData.phone,
     });
-  };
+
+    const pasajeroBackend = response.data;
+
+    // 2️⃣ Armar objeto que usará PaymentPage
+    const passengerForPayment = {
+      id: pasajeroBackend.id,               // IMPORTANTE para la reserva
+      name: pasajeroBackend.nombre,
+      email: pasajeroBackend.email,
+      documentType: pasajeroBackend.tipoDocumento,
+      documentNumber: pasajeroBackend.numeroDocumento,
+      phone: pasajeroBackend.telefono,
+    };
+
+    onContinueToPayment(passengerForPayment);
+  } catch (error) {
+    console.error("❌ Error al crear pasajero:", error);
+    alert("Ocurrió un error al guardar los datos del pasajero.");
+  }
+};
+
 
   const isFormValid = 
     passengerData.fullName.trim() !== "" &&
